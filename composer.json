@@ -11,12 +11,15 @@
    ],
     "autoload": {
         "psr-4": {
-        "Php\\Package\\": "src",
-        "Php\\Package\\Tests\\": "tests"
+        "App\\": "src",
+        "Tests\\": "tests"
         },
      "files":[
-        "config/database.php",
+        "src/config/database.php",
         "src/DatabaseConnect.php"
          ]
-    }
+    },
+  "require": {
+    "ext-pdo": "*"
+  }
 }

@@ -1,22 +1,38 @@
 <?php
 
-namespace First\Test\Task\DatabaseConnect;
+namespace App;
 
 use PDO;
 
-function connect(): PDO
+class DatabaseConnect
 {
-    require "/home/novapc74/firstTestTask/config/database.php";
+    private static $connect = null;
 
-    try {
-        $dsn = "$db_connection:host=$host;port=$port;dbname=$db;";
-        return  new \PDO(
-            $dsn,
-            $user,
-            $password,
-            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-        );
-    } catch (PDOException $e) {
-        die($e->getMessage());
+    public static function getConnect(): PDO
+    {
+        if (static::$connect !== null) {
+            return static::$connect;
+        }
+
+        $db_connection = DB_CONNECTION;
+        $host = HOST;
+        $port = PORT;
+        $db = DB;
+        $user = USER;
+        $password = PASSWORD;
+
+        try {
+            $dsn = "$db_connection:host=$host;port=$port;dbname=$db;";
+            static::$connect = new \PDO(
+                $dsn,
+                $user,
+                $password,
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+            );
+        } catch (\PDOException $e) {
+            die($e->getMessage());
+        }
+
+        return static::$connect;
     }
 }
