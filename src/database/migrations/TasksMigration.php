@@ -2,7 +2,7 @@
 
 namespace App\database\migrations;
 
-class TaskMigration extends BaseMigration
+class TasksMigration extends BaseMigration
 {
     function up()
     {

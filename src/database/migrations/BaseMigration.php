@@ -8,9 +8,9 @@ abstract class BaseMigration
 {
     protected $connect;
 
-    public function __construct()
+    public function __construct($config = null)
     {
-        $this->connect = DatabaseConnect::getConnect();
+        $this->connect = DatabaseConnect::getConnect($config);
     }
 
     abstract function up();

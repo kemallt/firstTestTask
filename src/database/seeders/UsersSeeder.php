@@ -4,7 +4,7 @@ namespace App\database\seeders;
 
 use App\database\migrations\BaseMigration;
 
-class UserSeeder extends BaseMigration
+class UsersSeeder extends BaseMigration
 {
     function up()
     {

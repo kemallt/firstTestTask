@@ -1,0 +1,44 @@
+#!/usr/bin/env php
+<?php
+$autoloadPath1 = __DIR__ . '/vendor/autoload.php';
+$autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
+if (file_exists($autoloadPath1)) {
+    require_once $autoloadPath1;
+} else {
+    require_once $autoloadPath2;
+}
+
+switch (count($argv)) {
+    case 1:
+        seedAllTables();
+        break;
+    case 2:
+        if ($argv[1] === 'up' or $argv[1] === 'down') {
+            $seedDirection = $argv[1];
+            seedAllTables($seedDirection);
+        } else {
+            $tableName = $argv[1];
+            seedTable($tableName);
+        }
+        break;
+    case 3:
+        $tableName = $argv[1];
+        $seedDirection = $argv[2];
+        seedTable($tableName, $seedDirection);
+        break;
+    default:
+        echo 'wrong arguments';
+}
+
+function seedTable($tableName, $seedDirection = 'up')
+{
+   $tableNameFirstUpp = ucfirst($tableName);
+   $migrationClassName = '\App\database\seeders\\' . $tableNameFirstUpp . 'Seeder';
+   $migration = new $migrationClassName();
+   $migration->{$seedDirection}();
+}
+
+function seedAllTables($seedDirection = 'up')
+{
+    seedTable('users', $seedDirection);
+}

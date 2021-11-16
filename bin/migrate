@@ -1,0 +1,50 @@
+#!/usr/bin/env php
+<?php
+$autoloadPath1 = __DIR__ . '/vendor/autoload.php';
+$autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
+if (file_exists($autoloadPath1)) {
+    require_once $autoloadPath1;
+} else {
+    require_once $autoloadPath2;
+}
+
+switch (count($argv)) {
+    case 1:
+        migrateAllTables('up');
+        break;
+    case 2:
+        if ($argv[1] === 'up' or $argv[1] === 'down') {
+            $migrateDirection = $argv[1];
+            migrateAllTables($migrateDirection);
+        } else {
+            $tableName = $argv[1];
+            migrateTable($tableName);
+        }
+        break;
+    case 3:
+        $tableName = $argv[1];
+        $migrateDirection = $argv[2];
+        migrateTable($tableName, $migrateDirection);
+        break;
+    default:
+        echo "wrong arguments";
+}
+
+function migrateAllTables($migrateDirection = 'up')
+{
+    if ($migrateDirection === 'up') {
+        migrateTable('users', $migrateDirection);
+        migrateTable('tasks', $migrateDirection);
+    } else {
+        migrateTable('tasks', $migrateDirection);
+        migrateTable('users', $migrateDirection);
+    }
+}
+
+function migrateTable($tableName, $migrateDirection = 'up')
+{
+    $tableNameFirstUpp = ucfirst($tableName);
+    $migrationClassName = '\App\database\migrations\\' . $tableNameFirstUpp . 'Migration';
+    $migration = new $migrationClassName();
+    $migration->{$migrateDirection}();
+}

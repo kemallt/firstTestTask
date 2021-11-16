@@ -10,10 +10,10 @@ require_once $autoloadPath2;
 //$taskMigration = new \App\database\migrations\UsersMigration();
 //$taskMigration->up();
 //
-$taskMigration = new \App\database\migrations\TaskMigration();
+$taskMigration = new \App\database\migrations\TasksMigration();
 $taskMigration->up();
 
-$seeds = new \App\database\seeders\UserSeeder();
+$seeds = new \App\database\seeders\UsersSeeder();
 $seeds->up();
 //
 //foreach ($result as $row) {
