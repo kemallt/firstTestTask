@@ -6,6 +6,8 @@ class User extends Table
 {
     public function __construct($id = null)
     {
+        static::$tableName = 'users';
+        
         parent::__construct();
         $this->fields = [
             'name' => null,
@@ -13,8 +15,7 @@ class User extends Table
             'is_admin' => 0,
             'password' => null
         ];
-
-        $this->tableName = 'users';
+        
         if ($id === null) {
             $this->isNew = true;
         } else {
@@ -83,19 +84,19 @@ class User extends Table
         return $this;
     }
 
-    public function all(): array
+    public static function all(): array
     {
-        $resData = $this->selectAll();
+        $resData = self::selectAll();
         return array_map(function ($resItem) {
             return new static($resItem['id']);
         }, $resData);
 
     }
 
-    public function find($id): User
+    public static function find($id): User
     {
-        $this->fields['id'] = $id;
-        $this->select();
-        return $this;
+        $user = new self($id);
+        $user->select();
+        return $user;
     }
 }

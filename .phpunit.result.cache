@@ -1,1 +1,1 @@
-{"version":1,"defects":[],"times":{"First\\Test\\Task\\Tests\\Task\\TaskTest::testExample":0.014,"Tests\\UserTest::testSave":0.075,"Tests\\UserTest::testAllAndUpdate":0.022,"Tests\\UserTest::testNewUser":0.022,"Tests\\UserTest::testFind":0.022}}
+{"version":1,"defects":{"Tests\\UserTest::testAllAndUpdate":4,"Tests\\UserTest::testSave":4},"times":{"First\\Test\\Task\\Tests\\Task\\TaskTest::testExample":0.014,"Tests\\UserTest::testSave":0.075,"Tests\\UserTest::testAllAndUpdate":0.021,"Tests\\UserTest::testNewUser":0.021,"Tests\\UserTest::testFind":0.021}}

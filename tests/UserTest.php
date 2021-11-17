@@ -25,9 +25,9 @@ class UserTest extends TestCase
         ];
 
         $this->connect = DatabaseConnect::getConnect($this->config);
-        $migrationUsers = new UsersMigration($this->config);
+        $migrationUsers = new UsersMigration();
         $migrationUsers->up();
-        $seederUsers = new UsersSeeder($this->config);
+        $seederUsers = new UsersSeeder();
         $seederUsers->up();
 
         $users = [
@@ -52,7 +52,7 @@ class UserTest extends TestCase
         $isAdmin = false;
         $password = '987654';
 
-        $user = new User(null, $this->config);
+        $user = new User(null);
         $user->setName($name);
         $user->setEmail($email);
         $user->setIsAdmin($isAdmin);
@@ -64,7 +64,7 @@ class UserTest extends TestCase
         $this->assertEquals($selectedUser->email, $email);
         $this->assertEquals($selectedUser->is_admin, (int)$isAdmin);
 
-        $newUser = new User($id, $this->config);
+        $newUser = new User($id);
         $this->assertEquals($name, $newUser->getName());
         $this->assertEquals($email, $newUser->getEmail());
         $this->assertEquals($isAdmin, $newUser->getIsAdmin());
@@ -72,36 +72,34 @@ class UserTest extends TestCase
 
     public function testAllAndUpdate()
     {
-        $user = new User(null, $this->config);
-        $allUsers = $user->all();
-        $user1 = new User(1, $this->config);
+        $allUsers = User::all();
+        $user1 = new User(1);
         $this->assertEquals($user1, $allUsers[0]);
         $user2 = $allUsers[1];
         $user2->setName('new name');
         $user2->save();
-        $user3 = new User($user2->getId(), $this->config);
+        $user3 = new User($user2->getId());
         $this->assertEquals('new name', $user3->getName());
     }
 
     public function testNewUser()
     {
-        $user = new User(2, $this->config);
+        $user = new User(2);
         $this->assertEquals('user1', $user->getName());
         $this->assertEquals('email1@user.ru', $user->getEmail());
 
         $this->expectException(\Exception::class);
-        $failedUser = new User(10, $this->config);
+        $failedUser = new User(10);
     }
 
     public function testFind()
     {
-        $user = new User(null, $this->config);
-        $user->find(2);
+        $user = User::find(2);
         $this->assertEquals('user1', $user->getName());
         $this->assertEquals('email1@user.ru', $user->getEmail());
 
         $this->expectException(\Exception::class);
-        $failedUser = new User(null, $this->config);
+        $failedUser = new User(null);
         $failedUser->find(10);
     }
 
@@ -118,7 +116,7 @@ class UserTest extends TestCase
 
     public function tearDown(): void
     {
-        $migrationUsers = new UsersMigration($this->config);
+        $migrationUsers = new UsersMigration();
         $migrationUsers->down();
     }
 }

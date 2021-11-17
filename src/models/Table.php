@@ -6,27 +6,29 @@ use App\DatabaseConnect;
 
 abstract class Table
 {
-    protected \PDO $connect;
-    protected string $tableName;
+    protected static string $tableName;
+    protected static \PDO $connect;
+    
     protected array $fields;
     protected bool $isNew;
 
     public function __construct()
     {
-        $this->connect = DatabaseConnect::getConnect();
+        static::$connect = DatabaseConnect::getConnect();
     }
 
-    protected function execQuery($query, $params = []): \PDOStatement
+    protected static function execQuery($query, $params = []): \PDOStatement
     {
-        $statement = $this->connect->prepare($query);
+        $statement = self::$connect->prepare($query);
         $statement->execute($params);
         return $statement;
     }
 
-    protected function selectAll(): array
+    protected static function selectAll(): array
     {
-        $query = "select id from {$this->tableName}";
-        $queryRes = $this->execQuery($query);
+        $tableName = static::$tableName;
+        $query = "select id from {$tableName}";
+        $queryRes = self::execQuery($query);
         if (!$queryRes) {
             return [];
         }
@@ -35,7 +37,8 @@ abstract class Table
 
     protected function select(): void
     {
-        $query = "select * from {$this->tableName} where id = :id";
+        $tableName = static::$tableName;
+        $query = "select * from {$tableName} where id = :id";
         $queryRes = $this->execQuery($query, ['id' => $this->fields['id']]);
         if (!$queryRes || $queryRes->rowCount() === 0) {
             throw new \Exception('could not get by supplied id');
@@ -48,22 +51,24 @@ abstract class Table
     {
         $fieldNamesString = $this->getFieldNamesString();
         $fieldsSting = $this->getInsertFieldsString();
-        $query = "insert into {$this->tableName} ({$fieldNamesString}) values ({$fieldsSting})";
+        $tableName = static::$tableName;
+        $query = "insert into {$tableName} ({$fieldNamesString}) values ({$fieldsSting})";
         $queryRes = $this->execQuery($query, $this->fields);
         if (!$queryRes) {
-            throw new \Exception("could not insert into {$this->tableName}");
+            throw new \Exception("could not insert into {$tableName}");
         }
-        return $this->connect->lastInsertId();
+        return self::$connect->lastInsertId();
     }
 
     protected function update(): void
     {
         $updateFieldsString = $this->getUpdateFieldString();
-        $query = "update {$this->tableName} set {$updateFieldsString} where id = :id";
+        $tableName = static::$tableName;
+        $query = "update {$tableName} set {$updateFieldsString} where id = :id";
         $params = array_merge($this->fields, ['id' => $this->fields['id']]);
         $queryRes = $this->execQuery($query, $params);
         if (!$queryRes) {
-            throw new \Exception("could not update {$this->tableName}");
+            throw new \Exception("could not update {$tableName}");
         }
     }
 
