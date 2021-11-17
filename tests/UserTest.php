@@ -10,21 +10,20 @@ use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
-    private $config;
     private $connect;
 
     public function setUp(): void
     {
-        $this->config = [
+        $config = [
             'db_connection' => 'mysql',
             'db' => 'test',
             'user' => 'root',
             'password' => 'root',
-            'host' => 'db',
+            'host' => 'db2',
             'port' => 3306
         ];
 
-        $this->connect = DatabaseConnect::getConnect($this->config);
+        $this->connect = DatabaseConnect::getConnect($config);
         $migrationUsers = new UsersMigration();
         $migrationUsers->up();
         $seederUsers = new UsersSeeder();
@@ -89,7 +88,7 @@ class UserTest extends TestCase
         $this->assertEquals('email1@user.ru', $user->getEmail());
 
         $this->expectException(\Exception::class);
-        $failedUser = new User(10);
+        new User(10);
     }
 
     public function testFind()
@@ -99,8 +98,7 @@ class UserTest extends TestCase
         $this->assertEquals('email1@user.ru', $user->getEmail());
 
         $this->expectException(\Exception::class);
-        $failedUser = new User(null);
-        $failedUser->find(10);
+        User::find(10);
     }
 
     private function getUserById($id)

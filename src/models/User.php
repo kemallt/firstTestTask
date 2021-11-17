@@ -99,4 +99,20 @@ class User extends Table
         $user->select();
         return $user;
     }
+    
+    public function tasks(): array
+    {
+        $query = "select * from tasks where user_id = :id";
+        $params = ['id' => $this->getId()];
+        $queryRes = self::execQuery($query, $params);
+        if (!$queryRes) {
+            return [];
+        }
+        return array_map(
+            function ($resItem) {
+                return new Task($resItem['id']);
+            },
+            $queryRes->fetchAll(\PDO::FETCH_ASSOC)
+        );
+    }
 }
