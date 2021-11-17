@@ -4,9 +4,9 @@ namespace App\models;
 
 class User extends Table
 {
-    public function __construct($id = null, $config = null)
+    public function __construct($id = null)
     {
-        parent::__construct($config);
+        parent::__construct();
         $this->fields = [
             'name' => null,
             'email' => null,
@@ -87,7 +87,7 @@ class User extends Table
     {
         $resData = $this->selectAll();
         return array_map(function ($resItem) {
-            return new static($resItem['id'], $this->config);
+            return new static($resItem['id']);
         }, $resData);
 
     }

@@ -7,7 +7,7 @@ class TasksMigration extends BaseMigration
     function up()
     {
         $this->connect->query("
-            CREATE TABLE tasks (
+            CREATE TABLE IF NOT EXISTS tasks (
                 id int PRIMARY KEY AUTO_INCREMENT,
                 user_id int NOT NULL REFERENCES users(id),
                 description text NOT NULL,
@@ -19,6 +19,6 @@ class TasksMigration extends BaseMigration
 
     function down()
     {
-        $this->connect->query("DROP TABLE tasks");
+        $this->connect->query("DROP TABLE IF EXISTS tasks");
     }
 }

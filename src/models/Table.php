@@ -7,15 +7,13 @@ use App\DatabaseConnect;
 abstract class Table
 {
     protected \PDO $connect;
-    protected ?array $config;
     protected string $tableName;
     protected array $fields;
     protected bool $isNew;
 
-    public function __construct($config = null)
+    public function __construct()
     {
-        $this->config = $config;
-        $this->connect = DatabaseConnect::getConnect($config);
+        $this->connect = DatabaseConnect::getConnect();
     }
 
     protected function execQuery($query, $params = []): \PDOStatement

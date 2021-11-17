@@ -1,13 +1,13 @@
 migrate:
-	@php -r 'include "database/migrations/users_migration.php";up();'
-	@php -r 'include "database/migrations/tasks_migration.php";up();'
+	./bin/migrate
 
 refresh:
-	@php -r 'include "database/migrations/tasks_migration.php";down();'
-	@php -r 'include "database/migrations/users_migration.php";down();'
+	./bin/migrate down
+	./bin/migrate up
+	./bin/seed up
 
 seed:
-	@php -r 'include "database/seeders/user_seeder.php";seed();'
+	./bin/seed
 
 test:
 	composer exec --verbose phpunit tests -- --coverage-text

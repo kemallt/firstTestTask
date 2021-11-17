@@ -8,6 +8,15 @@ class UsersSeeder extends BaseMigration
 {
     function up()
     {
+        $userAdminExists = $this->connect->query("
+            SELECT * FROM users WHERE email = 'admin@admin.com'
+        ")->rowCount() > 0;
+        if ($userAdminExists) {
+            $this->connect->query("
+                UPDATE users SET is_admin = true where email = 'admin@admin.com'
+            ");
+            return;
+        }
         $this->connect->query("
             INSERT INTO users (name, email, is_admin, password)
             VALUES ('admin', 'admin@admin.com', true, 'test')
@@ -16,6 +25,8 @@ class UsersSeeder extends BaseMigration
 
     function down()
     {
-    // TODO: Implement down() method.
+        $this->connect->query("
+            DELETE FROM users;
+        ");
     }
 }
