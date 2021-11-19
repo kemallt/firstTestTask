@@ -27,6 +27,10 @@ class App
     
     public static function view(string $viewName, string $title, array $params = []): string
     {
+        if (empty($_SESSION['token'])) {
+            $_SESSION['token'] = bin2hex(random_bytes(32));
+        }
+        $token = $_SESSION['token'];
         $host = self::getUrl($_SERVER['HTTP_HOST']);
         $registerAddress = "{$host}/register";
         $createAddress = "{$host}/create";
@@ -65,6 +69,7 @@ class App
         $loader = new FilesystemLoader(__DIR__ . '/Views');
         $twig = new Environment($loader);
         return $twig->render("{$viewName}.html.twig", array_merge([
+            'token' => $token,
             'title' => $title, 
             'host' => $host,
             'isAdmin' => $isAdmin,

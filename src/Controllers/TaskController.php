@@ -71,7 +71,7 @@ class TaskController
             $_SESSION['errors'] = $validationResult['errors'];
             return App::view('editTask', 'Редактировать задачу', ['taskData' => $taskData]);
         }
-        $validationEditResult = $this->validateEditTaskData($taskData);
+        $validationEditResult = $this->validateTaskData($taskData);
         if (!$validationEditResult['valid']) {
             $_SESSION['errors'] = $validationEditResult['errors'];
             return App::view('editTask', 'Редактировать задачу', ['taskData' => $taskData]);
@@ -87,21 +87,6 @@ class TaskController
         $task->save();
         $_SESSION['messages'] = ['Задача успешно обновлена'];
         return $this->showTasks();
-    }
-    
-    public function validateEditTaskData($taskData)
-    {
-        $valid = true;
-        $errors = [];
-        if (!is_bool($taskData['is_done'])) {
-            $valid = false;
-            $errors[] = 'Отметка о выполнении должна быть булева типа';
-        }
-        if ($taskData['id'] !== null && !is_int($taskData['id'])) {
-            $valid = false;
-            $errors[] = 'Неверный формат ИД пользователя';
-        }
-        return ['valid' => $valid, 'errors' => $errors];
     }
     
     public function validateTaskData($taskData): array

@@ -2,8 +2,16 @@
 
 {% block content %}
 <form action="{{ formAction }}" class="justify-content-center" method="post">
+    <input type="hidden" value="{{ token }}">
     <label for="task[description]">Описание задачи</label>
     <textarea name="task[description]" placeholder="Описание задачи" class="form-control desciption">{{ taskData['description'] }}</textarea>
+    {% if isAdmin and taskData['id'] is defined %}
+        <input type="hidden" value="{{ taskData['id'] }}" name="task[id]">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" {% if taskData['is_done'] %}checked{% endif %} name="task[is_done]">
+            <label class="form-check-label" for="task[is_done]">Выполнена</label>
+        </div>
+    {% endif %}
     <button type="submit" class="btn btn-lg btn-primary text-uppercase">Сохранить</button>
 </form>
 {% endblock %}
