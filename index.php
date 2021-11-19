@@ -1,21 +1,24 @@
 <?php
 
-//$autoloadPath1 = __DIR__ . '/../../../autoload.php';
+session_start();
+
+error_reporting( E_ALL );
+ini_set('display_errors', 1);
+
+$autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/vendor/autoload.php';
 
-require_once $autoloadPath2;
+if (file_exists($autoloadPath1)) {
+    require_once $autoloadPath1;
+} else {
+    require_once $autoloadPath2;
+}
 
+$app = new \App\App();
 
-////todo вынести механизм миграций в бинарный файл
-//$taskMigration = new \App\database\migrations\UsersMigration();
-//$taskMigration->up();
-//
-$taskMigration = new \App\database\migrations\TasksMigration();
-$taskMigration->up();
-
-$seeds = new \App\database\seeders\UsersSeeder();
-$seeds->up();
-//
-//foreach ($result as $row) {
-//    echo "{$row['id']} {$row['name']} {$row['email']} {$row['is_admin']} {$row['password']}" . PHP_EOL;
-//}
+try {
+    echo $app->getHandler();
+} catch (\Exception $e) {
+    $errorMessage = $e->getMessage();
+    echo \App\App::view('notfound', 'Ошибка', ['message' => $errorMessage]);
+}

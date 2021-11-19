@@ -1,22 +1,29 @@
 <?php
 
-namespace App\models;
+namespace App\Models;
 
 use App\DatabaseConnect;
 
 abstract class Table
 {
     protected static string $tableName;
-    protected static \PDO $connect;
+    protected static ?\PDO $connect = null;
     
     protected array $fields;
     protected bool $isNew;
 
     public function __construct()
     {
-        static::$connect = DatabaseConnect::getConnect();
+        if (self::$connect === null) {
+            self::init();
+        }
     }
 
+    protected static function init()
+    {
+        static::$connect = DatabaseConnect::getConnect();
+    }
+    
     protected static function execQuery($query, $params = []): \PDOStatement
     {
         $statement = self::$connect->prepare($query);

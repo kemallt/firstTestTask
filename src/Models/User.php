@@ -1,13 +1,13 @@
 <?php
 
-namespace App\models;
+namespace App\Models;
 
 class User extends Table
 {
+    protected static string $tableName = 'users';
+    
     public function __construct($id = null)
     {
-        static::$tableName = 'users';
-        
         parent::__construct();
         $this->fields = [
             'name' => null,
@@ -98,6 +98,17 @@ class User extends Table
         $user = new self($id);
         $user->select();
         return $user;
+    }
+    
+    public static function findByName($name): User
+    {
+        $query = "select * from users where name = :name";
+        $params = ['name' => $name];
+        $queryRes = self::execQuery($query, $params);
+        if ($queryRes && $queryRes->rowCount() > 0) {
+            return new self($queryRes->fetchObject()->id);
+        }
+        throw new \Exception('could not find user');
     }
     
     public function tasks(): array

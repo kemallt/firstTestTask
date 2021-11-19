@@ -9,7 +9,7 @@ class UsersMigration extends BaseMigration
         $this->connect->query("
             CREATE TABLE IF NOT EXISTS users (
                 id int PRIMARY KEY AUTO_INCREMENT,
-                name varchar(255) NOT null,
+                name varchar(255) UNIQUE NOT null,
                 email varchar(255) UNIQUE NOT null,
                 is_admin boolean DEFAULT FALSE ,
                 password varchar(60)

@@ -5,7 +5,7 @@ namespace Tests;
 use App\database\migrations\UsersMigration;
 use App\database\seeders\UsersSeeder;
 use App\DatabaseConnect;
-use App\models\User;
+use App\Models\User;
 use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
@@ -16,10 +16,10 @@ class UserTest extends TestCase
     {
         $config = [
             'db_connection' => 'mysql',
-            'db' => 'test',
+            'db' => 'testtest',
             'user' => 'root',
-            'password' => 'root',
-            'host' => 'db2',
+            'password' => '129354',
+            'host' => 'localhost',
             'port' => 3306
         ];
 

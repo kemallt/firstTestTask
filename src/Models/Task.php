@@ -1,15 +1,16 @@
 <?php
 
-namespace App\models;
+namespace App\Models;
 
 class Task extends Table
 {
+    protected static string $tableName = 'tasks'; 
+    
     public function __construct($id = null)
     {
-        static::$tableName = 'tasks';
-
         parent::__construct();
         $this->fields = [
+            'id' => null,
             'user_id' => null,
             'description' => null,
             'is_done' => 0,
@@ -81,6 +82,7 @@ class Task extends Table
 
     public static function all(): array
     {
+        static::init();
         $resData = self::selectAll();
         return array_map(function ($resItem) {
             return new static($resItem['id']);
@@ -90,6 +92,7 @@ class Task extends Table
 
     public static function find($id): Task
     {
+        static::init();
         $task = new self($id);
         $task->select();
         return $task;
