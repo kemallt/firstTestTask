@@ -1,0 +1,15 @@
+{% extends 'layout.html.twig' %}
+
+{% block panel %}
+<header class="flex-shrink-0">
+    <nav class="navbar">
+        <a class="navbar-brand mr-auto" href="{{ host }}">Управление задачами</a>
+        <div class="ml-auto d-flex">
+            <a class="nav-link ml-auto" href="{{ loginAddress }}">Вход</a>
+            {% if showRegisterAddress %}
+                <a class="nav-link" href="{{ registerAddress }}">Регистрация</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+{% endblock %}

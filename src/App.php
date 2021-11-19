@@ -4,6 +4,8 @@ namespace App;
 
 use App\Controllers\LoginController;
 use App\Controllers\TaskController;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class App
 {
@@ -32,10 +34,17 @@ class App
         $loginAddress = $currentUser === null ? "{$host}/login" : "{$host}/logout";
         $registerAddress = "{$host}/register";
         $showRegisterAddress = $currentUser === null;
-        $panel = include("Views/panel.view.php");
-        $content = include("Views/{$viewName}.view.php");
         
-        return include("Views/layout.view.php");
+        $loader = new FilesystemLoader(__DIR__ . '/Views');
+        $twig = new Environment($loader);
+        return $twig->render("{$viewName}.html.twig", [
+            'host' => $host,
+            'isAdmin' => $isAdmin,
+            'loginAddress' => $loginAddress,
+            'registerAddress' => $registerAddress,
+            'showRegisterAddress' => $showRegisterAddress,
+            'params' => $params
+        ]);
     }
     
     public function getHandler(): string
@@ -78,7 +87,13 @@ class App
     
     public function setRoute()
     {
-        $url = explode('/', $_SERVER['REQUEST_URI']);
+        $requestUrl = explode('?', $_SERVER['REQUEST_URI']);
+        if (count($requestUrl) > 0) {
+            $urlData = $requestUrl[0];
+        } else {
+            $urlData = $requestUrl;
+        }
+        $url = explode('/', $urlData);
         $method = $_SERVER['REQUEST_METHOD'];
         if ($method === 'GET') {
             if ($url[1] === "") {

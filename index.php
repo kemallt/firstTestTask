@@ -20,5 +20,6 @@ try {
     echo $app->getHandler();
 } catch (\Exception $e) {
     $errorMessage = $e->getMessage();
-    echo \App\App::view('notfound', 'Ошибка', ['message' => $errorMessage]);
+    $output = \App\App::view('notfound', 'Ошибка', ['message' => $errorMessage]);
+    echo $output;
 }
