@@ -28,22 +28,44 @@ class App
     public static function view(string $viewName, string $title, array $params = []): string
     {
         $host = self::getUrl($_SERVER['HTTP_HOST']);
-        $currentUser = LoginController::getCurrentUser();
-        $isAdmin = $currentUser === null ? false : $currentUser->getIsAdmin();
-        $loginAddress = $currentUser === null ? "{$host}/login" : "{$host}/logout";
         $registerAddress = "{$host}/register";
-        $showRegisterAddress = $currentUser === null;
         $createAddress = "{$host}/create";
+
+        $currentUser = LoginController::getCurrentUser();
+        if ($currentUser === null) {
+            $isAdmin = false;
+            $loginText = 'Вход';
+            $loginAddress = "{$host}/login";
+            $showRegisterAddress = true;
+        } else {
+            $isAdmin = $currentUser->getIsAdmin();
+            $loginText = 'Выход';
+            $loginAddress = "{$host}/logout";
+            $showRegisterAddress = false;
+        }
+        if (array_key_exists('messages', $_SESSION)) {
+            $messages = $_SESSION['messages'];
+            $_SESSION['messages'] = [];
+        }
+        if (array_key_exists('errors', $_SESSION)) {
+            $errors = $_SESSION['errors'];
+            $_SESSION['errors'] = [];
+        }
+        
         
         $loader = new FilesystemLoader(__DIR__ . '/Views');
         $twig = new Environment($loader);
         return $twig->render("{$viewName}.html.twig", array_merge([
+            'title' => $title, 
             'host' => $host,
             'isAdmin' => $isAdmin,
             'loginAddress' => $loginAddress,
+            'loginText' => $loginText,
             'registerAddress' => $registerAddress,
             'showRegisterAddress' => $showRegisterAddress,
-            'createAddress' => $createAddress
+            'createAddress' => $createAddress,
+            'messages' => $messages,
+            'errors' => $errors
         ], $params));
     }
     

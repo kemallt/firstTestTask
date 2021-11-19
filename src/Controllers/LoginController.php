@@ -54,13 +54,15 @@ class LoginController
             $user->setPassword(password_hash($userData['password'], PASSWORD_DEFAULT));
             $user->setEmail($userData['email']);
             $user->setName($userData['name']);
-            $userId = $user->save();
-            $_SESSION['userId'] = $userId;
+            $user = $user->save();
+            $_SESSION['userId'] = $user->getId();
+            $_SESSION['messages'] = ['Пользователь успешно зарегистрирован'];
             $newUrl = App::getUrl($_SERVER['HTTP_HOST']);
             header("Location: {$newUrl}");
             exit();
         }
-        return App::view('registerForm', 'Вход', ['userData' => $userData, 'errors' => $validationResult['errors']]);
+        $_SESSION['errors'] = $validationResult['errors'];
+        return App::view('registerForm', 'Вход', ['userData' => $userData]);
     }
     
     private function validateUserData($userData): array
@@ -69,15 +71,15 @@ class LoginController
         $errors = [];
         if (!filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
             $valid = false;
-            $errors[] = 'invalid email';
+            $errors[] = 'Некорректный email';
         }
         if (strlen($userData['name']) < 3) {
             $valid = false;
-            $errors[] = 'must be more then 3 chars';
+            $errors[] = 'Имя пользователя должно быть более 3 символов в длину';
         }
-        if (strlen($userData['password'])) {
+        if (strlen($userData['password']) < 3) {
             $valid = false;
-            $errors[] = 'must be more then 3 chars';
+            $errors[] = 'Пароль должен быть более 3 символов в длину';
         }
         return ['valid' => $valid, 'errors' => $errors];
     }

@@ -3,25 +3,25 @@
 {% block content %}
 <main class="flex-grow-1">
     <div class="container-lg">
-        <table>
+        <table class="table table-bordered table-hover text-nowrap">
             <thead>
                 <tr>
-                    <th>Пользователь</th>
-                    <th>email</th>
-                    <th>Выполнена</th>
-                    <th>Отредактирована администратором</th>
+                    <th class="col-3">Пользователь</th>
+                    <th class="col-3">email</th>
+                    <th class="col-1">Выполнена</th>
+                    <th class="col-1">Отредактирована администратором</th>
                 </tr>
             </thead>
             <tbody>
                 {% for task in tasks %}
                 <tr>
-                    <td>{{ task['userName'] }}</td>
-                    <td>{{ task['userEmail'] }}</td>
-                    <td><input type="checkbox" class="form-input" {% if not isAdmin %}readonly{% endif%} {% if task['isDone'] %}checked{% endif %}}></td>
-                    <td><input type="checkbox" class="form-input" {% if not isAdmin %}readonly{% endif%} {% if task['isEditsByAdmin'] %}checked{% endif %}}></td>
+                    <td class="col-1">{{ task['userName'] }}</td>
+                    <td class="col-3">{{ task['userEmail'] }}</td>
+                    <td class="col-4"><input type="checkbox" class="form-input" {% if not isAdmin %}readonly{% endif%} {% if task['isDone'] %}checked{% endif %}}></td>
+                    <td class="col-5"><input type="checkbox" class="form-input" readonly {% if task['isEditsByAdmin'] %}checked{% endif %}}></td>
                 </tr>
                 <tr>
-                    <td colspan="5">
+                    <td colspan="4">
                         {{ task['description'] }}
                     </td>        
                 </tr>

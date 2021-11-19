@@ -8,10 +8,10 @@ use App\Models\User;
 
 class TaskController
 {
-    public function showTasks($messages = null)
+    public function showTasks()
     {
         $tasks = Task::allWithUsers();
-        return App::view('showTasks', 'Список задач', ['tasks' => $tasks], $messages = $messages);
+        return App::view('showTasks', 'Список задач', ['tasks' => $tasks]);
     }
     
     public function createTask()
@@ -38,7 +38,14 @@ class TaskController
     {
         $currentUser = LoginController::getCurrentUser();
         if ($currentUser === null) {
-            return App::view('editTask', 'Создать задачу', ['taskData' => $taskData, 'errors' => ['user' => 'tasks may be created only by registerd users']]);
+            return App::view(
+                'editTask',
+                'Создать задачу',
+                [
+                    'taskData' => $taskData,
+                    'errors' => ['user' => 'Задача может быть создана только зарегстрированным пользователем']
+                ]
+            );
         }
         $validationResult = $this->validateTaskData($taskData, $currentUser);
         if (!$validationResult['valid']) {
@@ -46,24 +53,28 @@ class TaskController
         }
         $task = new Task();
         $task->setDescription($taskData['description']);
+        $task->setUser($currentUser);
         $task->save();
-        $messages = ['task successfully saved'];
-        return $this->showTasks($messages);
+        $_SESSION['messages'] = ['Задача успешно добавлена'];
+        return $this->showTasks();
     }
     
     public function updateTask($taskData)
     {
         $currentUser = LoginController::getCurrentUser();
         if ($currentUser === null || !$currentUser->getIsAdmin()) {
-            return App::view('editTask', 'Редактировать задачу', ['taskData' => $taskData, 'errors' => ['user' => 'tasks may be edited only by admin']]);
+            $_SESSION['errors'] =  ['tasks may be edited only by admin']; 
+            return App::view('editTask', 'Редактировать задачу', ['taskData' => $taskData]);
         }
         $validationResult = $this->validateTaskData($taskData);
         if (!$validationResult['valid']) {
-            return App::view('editTask', 'Редактировать задачу', ['taskData' => $taskData, 'errors' => $validationResult['errors']]);
+            $_SESSION['errors'] = $validationResult['errors'];
+            return App::view('editTask', 'Редактировать задачу', ['taskData' => $taskData]);
         }
         $validationEditResult = $this->validateEditTaskData($taskData);
         if (!$validationEditResult['valid']) {
-            return App::view('editTask', 'Редактировать задачу', ['taskData' => $taskData, 'errors' => $validationEditResult['errors']]);
+            $_SESSION['errors'] = $validationEditResult['errors'];
+            return App::view('editTask', 'Редактировать задачу', ['taskData' => $taskData]);
         }
         $task = new Task($taskData['id']);
         if ($taskData['id'] !== null) {
@@ -71,12 +82,11 @@ class TaskController
             $isEditsByAdmin = $oldDescription !== $taskData['description'];
         }
         $task->setDescription($taskData['description']);
-        $task->setUser($currentUser);
         $task->setIsDone($taskData['is_done']);
         $task->setIsEditsByAdmin($isEditsByAdmin);
         $task->save();
-        $messages = ['task successfully saved'];
-        return $this->showTasks($messages);
+        $_SESSION['messages'] = ['Задача успешно обновлена'];
+        return $this->showTasks();
     }
     
     public function validateEditTaskData($taskData)
@@ -85,22 +95,22 @@ class TaskController
         $errors = [];
         if (!is_bool($taskData['is_done'])) {
             $valid = false;
-            $errors[] = 'must be boolean';
+            $errors[] = 'Отметка о выполнении должно быть булева типа';
         }
         if ($taskData['id'] !== null && !is_int($taskData['id'])) {
             $valid = false;
-            $errors[] = 'id must be null or interger';
+            $errors[] = 'Неверный формат ИД пользователя';
         }
         return ['valid' => $valid, 'errors' => $errors];
     }
     
-    public function validateTaskData($taskData, $currentUser): array
+    public function validateTaskData($taskData): array
     {
         $valid = true;
         $errors = [];
         if (!is_string($taskData['description']) || strlen($taskData['description']) < 3) {
             $valid = false;
-            $errors[] = 'must be string more then 3 chars';
+            $errors[] = 'Описание должно быть более 3 символов в длину';
         }
         return ['valid' => $valid, 'errors' => $errors]; 
     }

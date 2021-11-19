@@ -1,14 +1,14 @@
 {% extends 'alerts.html.twig' %}
 
 {% block panel %}
-<header class="flex-shrink-0">
+<header class="flex-shrink-0 container-lg">
     <nav class="navbar">
         <div class="mr-auto d-flex">
             <a class="nav-link" href="{{ host }}">Список задач</a>
             <a class="nav-link" href="{{ createAddress }}">Новая задача</a>
         </div>
         <div class="ml-auto d-flex">
-            <a class="nav-link ml-auto" href="{{ loginAddress }}">Вход</a>
+            <a class="nav-link ml-auto" href="{{ loginAddress }}">{{ loginText }}</a>
             {% if showRegisterAddress %}
                 <a class="nav-link" href="{{ registerAddress }}">Регистрация</a>
             {% endif %}
