@@ -69,15 +69,15 @@ class LoginController
         $errors = [];
         if (!filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
             $valid = false;
-            $errors['email'] = 'invalid email';
+            $errors[] = 'invalid email';
         }
         if (strlen($userData['name']) < 3) {
             $valid = false;
-            $errors['name'] = 'must be more then 3 chars';
+            $errors[] = 'must be more then 3 chars';
         }
         if (strlen($userData['password'])) {
             $valid = false;
-            $errors['password'] = 'must be more then 3 chars';
+            $errors[] = 'must be more then 3 chars';
         }
         return ['valid' => $valid, 'errors' => $errors];
     }

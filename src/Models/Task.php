@@ -80,6 +80,28 @@ class Task extends Table
         return $this;
     }
 
+    public static function allWithUsers($offset = null, $chunk = null): array
+    {
+        $query = "select tasks.id as id,
+                    tasks.description as description,
+                    tasks.is_done as isDone,
+                    tasks.is_edits_by_admin as isEditsByAdmin,
+                    users.name as userName,
+                    users.email as userEmail
+                    from tasks left join users on tasks.user_id = users.id";
+        if ($chunk !== null) {
+            $query .= " limit $chunk";
+        }
+        if ($offset !== null) {
+            $query .= " offset $offset";
+        }
+        $queryRes = self::execQuery($query);
+        if ($queryRes && $queryRes->rowCount()) {
+            return $queryRes->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_UNIQUE);
+        }
+        return [];
+    }
+    
     public static function all(): array
     {
         static::init();

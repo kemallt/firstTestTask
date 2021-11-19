@@ -26,6 +26,7 @@ abstract class Table
     
     protected static function execQuery($query, $params = []): \PDOStatement
     {
+        self::init();
         $statement = self::$connect->prepare($query);
         $statement->execute($params);
         return $statement;

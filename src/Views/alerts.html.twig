@@ -1,0 +1,14 @@
+{% extends 'layout.html.twig' %}
+
+{% block alerts %}
+{% if errors is defined and not errors == null %}
+    {% for error in errors %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endfor %}
+{% endif %}
+{% if messages is defined and not messages == null %}
+    {% for message in messages %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

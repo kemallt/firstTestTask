@@ -6,13 +6,26 @@
         <table>
             <thead>
                 <tr>
-                    <th>Заголовок</th>
+                    <th>Пользователь</th>
+                    <th>email</th>
+                    <th>Выполнена</th>
+                    <th>Отредактирована администратором</th>
                 </tr>
             </thead>
             <tbody>
+                {% for task in tasks %}
                 <tr>
-                    <td>Строка</td>
+                    <td>{{ task['userName'] }}</td>
+                    <td>{{ task['userEmail'] }}</td>
+                    <td><input type="checkbox" class="form-input" {% if not isAdmin %}readonly{% endif%} {% if task['isDone'] %}checked{% endif %}}></td>
+                    <td><input type="checkbox" class="form-input" {% if not isAdmin %}readonly{% endif%} {% if task['isEditsByAdmin'] %}checked{% endif %}}></td>
                 </tr>
+                <tr>
+                    <td colspan="5">
+                        {{ task['description'] }}
+                    </td>        
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

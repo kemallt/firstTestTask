@@ -11,7 +11,7 @@ class App
 {
     private string $route = "";
     private string $queryParameter = "";
-    private ?mix $data = null;
+    private ?array $data = null;
     private static bool $isAdmin = false;
     
     public function __construct()
@@ -22,8 +22,7 @@ class App
     public static function getUrl($host)
     {
         $protocol = array_key_exists('HTTPS', $_SERVER) ? "https" : "http";
-        $url = $protocol . '://' . $host;
-        return $url;         
+        return $protocol . '://' . $host;         
     }
     
     public static function view(string $viewName, string $title, array $params = []): string
@@ -61,9 +60,12 @@ class App
                 $controller = new TaskController();
                 $taskId = (int)$this->queryParameter;
                 return $controller->editTask($taskId);
-            case "save":
+            case "store":
                 $controller = new TaskController();
-                return $controller->saveTask($this->data);
+                return $controller->storeTask($this->data);
+            case "update":
+                $controller = new TaskController();
+                return $controller->updateTask($this->data);
             case "loginform":
                 $controller = new LoginController();
                 return $controller->showLoginForm();
@@ -79,7 +81,7 @@ class App
                 return $controller->showRegisterForm();
             case "register":
                 $controller = new LoginController();
-                return $controller->register();
+                return $controller->register($this->data);
             case "notfound":
                 return self::view('notfound', 'Page not found', ['message' => 'page not found']);
         }
