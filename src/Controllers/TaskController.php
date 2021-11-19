@@ -95,7 +95,7 @@ class TaskController
         $errors = [];
         if (!is_bool($taskData['is_done'])) {
             $valid = false;
-            $errors[] = 'Отметка о выполнении должно быть булева типа';
+            $errors[] = 'Отметка о выполнении должна быть булева типа';
         }
         if ($taskData['id'] !== null && !is_int($taskData['id'])) {
             $valid = false;

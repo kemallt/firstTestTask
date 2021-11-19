@@ -17,12 +17,17 @@
                 <tr>
                     <td class="col-1">{{ task['userName'] }}</td>
                     <td class="col-3">{{ task['userEmail'] }}</td>
-                    <td class="col-4"><input type="checkbox" class="form-input" {% if not isAdmin %}readonly{% endif%} {% if task['isDone'] %}checked{% endif %}}></td>
-                    <td class="col-5"><input type="checkbox" class="form-input" readonly {% if task['isEditsByAdmin'] %}checked{% endif %}}></td>
+                    <td class="col-4"><input type="checkbox" class="form-input" disabled {% if task['isDone'] %}checked{% endif %}></td>
+                    <td class="col-5"><input type="checkbox" class="form-input" disabled {% if task['isEditsByAdmin'] %}checked{% endif %}></td>
                 </tr>
                 <tr>
                     <td colspan="4">
-                        {{ task['description'] }}
+                        <div class="container row-text">
+                            <p class="d-flex">{{ task['description'] }}</p>
+                            {% if isAdmin %}
+                                <a class="ml-auto d-flex" href="{{ host ~ '/edit/' ~ task['id']}}">Редактировать</a>
+                            {% endif %}
+                        </div>
                     </td>        
                 </tr>
                 {% endfor %}

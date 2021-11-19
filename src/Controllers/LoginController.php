@@ -7,9 +7,25 @@ use App\Models\User;
 
 class LoginController
 {
-    public function showLoginForm()
+    public static function getCurrentUser(): ?User
+    {
+        $userId = $_SESSION['userId'] ?? null;
+        return $userId === null ? null : new User($userId);
+    }
+
+    public static function discardCurrentUser(): void
+    {
+        $_SESSION['userId'] = null;
+    }
+
+    public function getLoginForm(): string
     {
         return App::view('loginForm', 'Вход');
+    }
+
+    public function getRegisterForm(): string
+    {
+        return App::view('registerForm', 'Регистрация');
     }
 
     public function login(array $credentials): mixed
@@ -19,31 +35,21 @@ class LoginController
         } catch (\Exception $e) {
             return App::view('loginForm', 'Вход', $credentials);
         }
-        if ($user->getPassword() === password_hash($credentials['password'], PASSWORD_DEFAULT)) {
+        if (password_verify($credentials['password'], $user->getPassword())) {
             $_SESSION['userId'] = $user->getId();
             $newUrl = App::getUrl($_SERVER['HTTP_HOST']);
             header("Location: {$newUrl}");
             exit();
         }
-        return "";
+        $_SESSION['errors'] = ['Неверный пароль'];
+        return App::view('loginForm', 'Вход', $credentials);
     }
 
     public function logout(): void
     {
-        $_SESSION['userId'] = null;
+        self::discardCurrentUser();        
         $newUrl = App::getUrl($_SERVER['HTTP_HOST']);
         header("Location: {$newUrl}");
-    }
-    
-    public static function getCurrentUser(): ?User
-    {
-        $userId = $_SESSION['userId'] ?? null;
-        return $userId === null ? null : new User($userId);
-    }
-
-    public function showRegisterForm(): string
-    {
-        return App::view('registerForm', 'Регистрация');
     }
     
     public function register(array $userData): string
@@ -51,7 +57,7 @@ class LoginController
         $validationResult = $this->validateUserData($userData);
         if ($validationResult['valid']) {
             $user = new User();
-            $user->setPassword(password_hash($userData['password'], PASSWORD_DEFAULT));
+            $user->setPassword($userData['password']);
             $user->setEmail($userData['email']);
             $user->setName($userData['name']);
             $user = $user->save();

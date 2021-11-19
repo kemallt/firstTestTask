@@ -5,3 +5,7 @@
 .form-control {
     margin-bottom: 1rem;
 }
+.row-text {
+    display: flex;
+    justify-content: space-between;
+}

@@ -12,7 +12,7 @@ class UsersMigration extends BaseMigration
                 name varchar(255) UNIQUE NOT null,
                 email varchar(255) UNIQUE NOT null,
                 is_admin boolean DEFAULT FALSE ,
-                password varchar(60)
+                password varchar(255)
             )
         ");
     }

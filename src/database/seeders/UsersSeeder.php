@@ -17,9 +17,10 @@ class UsersSeeder extends BaseMigration
             ");
             return;
         }
+        $password = password_hash('123', PASSWORD_DEFAULT);
         $this->connect->query("
             INSERT INTO users (name, email, is_admin, password)
-            VALUES ('admin', 'admin@admin.com', true, 'test')
+            VALUES ('admin', 'admin@admin.com', true, '{$password}')
             ");
     }
 

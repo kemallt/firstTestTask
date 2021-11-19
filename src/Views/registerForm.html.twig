@@ -1,9 +1,12 @@
 {% extends 'panel.html.twig' %}
 
 {% block content %}
-    <form action="{{ formAction }}" class="justify-content-center" method="post">
+    <form class="justify-content-center" method="post">
+        <label for="userData[name]">Имя пользователя</label>
         <input type="text" name="userData[name]" value="{{ userData['name'] }}" placeholder="Имя пользователя" class="form-control">
+        <label for="userData[email]">Email пользователя</label>
         <input type="text" name="userData[email]" value="{{ userData['email'] }}" placeholder="email" class="form-control">
+        <label for="userData[password]">Пароль</label>
         <input type="text" name="userData[password]" value="{{ userData['password'] }}" placeholder="Пароль" class="form-control">
         <button type="submit" class="btn btn-lg btn-primary text-uppercase">Сохранить</button>
     </form>

@@ -82,7 +82,8 @@ class Task extends Table
 
     public static function allWithUsers($offset = null, $chunk = null): array
     {
-        $query = "select tasks.id as id,
+        $query = "select tasks.id as idFetch,
+                    tasks.id as id,
                     tasks.description as description,
                     tasks.is_done as isDone,
                     tasks.is_edits_by_admin as isEditsByAdmin,
@@ -122,8 +123,7 @@ class Task extends Table
     
     public function getUser(): User
     {
-        $user = new User($this->fields['user_id']);
-        return $user;
+        return new User($this->fields['user_id']);
     }
     
     public function setUser(User $user): Task

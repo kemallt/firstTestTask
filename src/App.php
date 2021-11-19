@@ -31,14 +31,20 @@ class App
         $registerAddress = "{$host}/register";
         $createAddress = "{$host}/create";
 
-        $currentUser = LoginController::getCurrentUser();
+        try {
+            $currentUser = LoginController::getCurrentUser();
+        } catch (\Exception $e) {
+            $currentUser = null;
+            $_SESSION['errors'] = ["Не удалось определить пользователя - " . $e->getMessage()];
+            LoginController::discardCurrentUser();
+        }
         if ($currentUser === null) {
             $isAdmin = false;
             $loginText = 'Вход';
             $loginAddress = "{$host}/login";
             $showRegisterAddress = true;
         } else {
-            $isAdmin = $currentUser->getIsAdmin();
+            $isAdmin = (bool)$currentUser->getIsAdmin();
             $loginText = 'Выход';
             $loginAddress = "{$host}/logout";
             $showRegisterAddress = false;
@@ -46,12 +52,15 @@ class App
         if (array_key_exists('messages', $_SESSION)) {
             $messages = $_SESSION['messages'];
             $_SESSION['messages'] = [];
+        } else {
+            $messages = [];
         }
         if (array_key_exists('errors', $_SESSION)) {
             $errors = $_SESSION['errors'];
             $_SESSION['errors'] = [];
+        } else {
+            $errors = [];
         }
-        
         
         $loader = new FilesystemLoader(__DIR__ . '/Views');
         $twig = new Environment($loader);
@@ -90,7 +99,7 @@ class App
                 return $controller->updateTask($this->data);
             case "loginform":
                 $controller = new LoginController();
-                return $controller->showLoginForm();
+                return $controller->getLoginForm();
             case "login":
                 $controller = new LoginController();
                 return $controller->login($this->data);
@@ -100,7 +109,7 @@ class App
                 break;
             case "registerForm":
                 $controller = new LoginController();
-                return $controller->showRegisterForm();
+                return $controller->getRegisterForm();
             case "register":
                 $controller = new LoginController();
                 return $controller->register($this->data);
@@ -129,7 +138,7 @@ class App
                 $this->route = "create";
                 return;
             }
-            if ($url[1] === "update" && count($url) === 3) {
+            if ($url[1] === "edit" && count($url) === 3) {
                 $this->route = "edit";
                 $this->queryParameter = $url[2];
                 return;
@@ -153,7 +162,7 @@ class App
                 $this->data = $_POST['task'];
                 return;
             }
-            if ($url[1] === "update" && array_key_exists('task', $_POST)) {
+            if ($url[1] === "edit" && array_key_exists('task', $_POST)) {
                 $this->route = "update";
                 $this->data = $_POST['task'];
                 return;
