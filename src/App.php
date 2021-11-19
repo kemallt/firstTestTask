@@ -34,17 +34,18 @@ class App
         $loginAddress = $currentUser === null ? "{$host}/login" : "{$host}/logout";
         $registerAddress = "{$host}/register";
         $showRegisterAddress = $currentUser === null;
+        $createAddress = "{$host}/create";
         
         $loader = new FilesystemLoader(__DIR__ . '/Views');
         $twig = new Environment($loader);
-        return $twig->render("{$viewName}.html.twig", [
+        return $twig->render("{$viewName}.html.twig", array_merge([
             'host' => $host,
             'isAdmin' => $isAdmin,
             'loginAddress' => $loginAddress,
             'registerAddress' => $registerAddress,
             'showRegisterAddress' => $showRegisterAddress,
-            'params' => $params
-        ]);
+            'createAddress' => $createAddress
+        ], $params));
     }
     
     public function getHandler(): string

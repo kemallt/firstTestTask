@@ -37,10 +37,8 @@ class LoginController
     
     public static function getCurrentUser(): ?User
     {
-        if ($_SERVER['userId'] ?? null === null) {
-            return null;
-        }
-        return new User($_SESSION['userId']);
+        $userId = $_SESSION['userId'] ?? null;
+        return $userId === null ? null : new User($userId);
     }
 
     public function showRegisterForm(): string
@@ -62,7 +60,7 @@ class LoginController
             header("Location: {$newUrl}");
             exit();
         }
-        return App::view('registrationForm', 'Вход', ['userData' => $userData, 'errors' => $validationResult['errors']]);
+        return App::view('registerForm', 'Вход', ['userData' => $userData, 'errors' => $validationResult['errors']]);
     }
     
     private function validateUserData($userData): array
