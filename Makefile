@@ -13,4 +13,4 @@ test:
 	composer exec --verbose phpunit tests -- --coverage-text
 
 run:
-	./bin/firstTestTask
+	php -S localhost:8000

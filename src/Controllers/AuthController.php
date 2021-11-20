@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\App;
 use App\Models\User;
 
-class LoginController
+class AuthController
 {
     public static function getCurrentUser(): ?User
     {

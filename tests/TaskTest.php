@@ -90,6 +90,7 @@ class TaskTest extends TestCase
     public function testAllAndUpdate()
     {
         $allTasks = Task::all();
+        usort($allTasks, fn ($task1, $task2) => $task1->getId() > $task2->getId());
         $task1 = new Task(1);
         $this->assertEquals($task1, $allTasks[0]);
         $task2 = $allTasks[1];

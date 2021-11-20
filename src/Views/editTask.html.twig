@@ -1,7 +1,7 @@
 {% extends 'panel.html.twig' %}
 
 {% block content %}
-<form action="{{ formAction }}" class="justify-content-center" method="post">
+<form action="{{ host ~ '/' ~ formAction }}" class="justify-content-center" method="post">
     <input type="hidden" value="{{ token }}">
     <label for="task[description]">Описание задачи</label>
     <textarea name="task[description]" placeholder="Описание задачи" class="form-control desciption">{{ taskData['description'] }}</textarea>

@@ -23,7 +23,7 @@ class TaskController
     {
         $task = Task::find($taskId);
         if ($task->getId() === null) {
-            return App::view('editTask', 'Новая задача', ['formAction' => 'store']);
+            return App::view('editTask', 'Новая задача', ['formAction' => 'update']);
         }
         $taskData = [
             'id' => $taskId,
@@ -36,21 +36,12 @@ class TaskController
     
     public function storeTask($taskData)
     {
-        $currentUser = LoginController::getCurrentUser();
-        if ($currentUser === null) {
-            return App::view(
-                'editTask',
-                'Создать задачу',
-                [
-                    'taskData' => $taskData,
-                    'errors' => ['user' => 'Задача может быть создана только зарегстрированным пользователем']
-                ]
-            );
-        }
-        $validationResult = $this->validateTaskData($taskData, $currentUser);
+        $validationResult = $this->validateTaskData($taskData);
         if (!$validationResult['valid']) {
-            return App::view('editTask', 'Создать задачу', ['taskData' => $taskData, 'errors' => $validationResult['errors']]);
+            $_SESSION['errors'] = $validationResult['errors'];
+            return App::view('editTask', 'Создать задачу', ['taskData' => $taskData]);
         }
+        $currentUser = AuthController::getCurrentUser();
         $task = new Task();
         $task->setDescription($taskData['description']);
         $task->setUser($currentUser);
@@ -61,19 +52,9 @@ class TaskController
     
     public function updateTask($taskData)
     {
-        $currentUser = LoginController::getCurrentUser();
-        if ($currentUser === null || !$currentUser->getIsAdmin()) {
-            $_SESSION['errors'] =  ['tasks may be edited only by admin']; 
-            return App::view('editTask', 'Редактировать задачу', ['taskData' => $taskData]);
-        }
         $validationResult = $this->validateTaskData($taskData);
         if (!$validationResult['valid']) {
             $_SESSION['errors'] = $validationResult['errors'];
-            return App::view('editTask', 'Редактировать задачу', ['taskData' => $taskData]);
-        }
-        $validationEditResult = $this->validateTaskData($taskData);
-        if (!$validationEditResult['valid']) {
-            $_SESSION['errors'] = $validationEditResult['errors'];
             return App::view('editTask', 'Редактировать задачу', ['taskData' => $taskData]);
         }
         $task = new Task($taskData['id']);
@@ -82,7 +63,7 @@ class TaskController
             $isEditsByAdmin = $oldDescription !== $taskData['description'];
         }
         $task->setDescription($taskData['description']);
-        $task->setIsDone($taskData['is_done']);
+        $task->setIsDone($taskData['is_done'] ?? false);
         $task->setIsEditsByAdmin($isEditsByAdmin);
         $task->save();
         $_SESSION['messages'] = ['Задача успешно обновлена'];

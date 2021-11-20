@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Controllers\LoginController;
+use App\Controllers\AuthController;
 use App\Controllers\TaskController;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -36,11 +36,11 @@ class App
         $createAddress = "{$host}/create";
 
         try {
-            $currentUser = LoginController::getCurrentUser();
+            $currentUser = AuthController::getCurrentUser();
         } catch (\Exception $e) {
             $currentUser = null;
             $_SESSION['errors'] = ["Не удалось определить пользователя - " . $e->getMessage()];
-            LoginController::discardCurrentUser();
+            AuthController::discardCurrentUser();
         }
         if ($currentUser === null) {
             $isAdmin = false;
@@ -91,32 +91,52 @@ class App
                 return $controller->showTasks();
             case "create":
                 $controller = new TaskController();
+                $currentUser = AuthController::getCurrentUser();
+                if ($currentUser === null) {
+                    $_SESSION['errors'] = ['Задача может быть создана только зарегистрированным пользователем'];
+                    return $controller->showTasks();
+                }
                 return $controller->createTask();
             case "edit":
                 $controller = new TaskController();
+                $currentUser = AuthController::getCurrentUser();
+                if ($currentUser === null || !$currentUser->getIsAdmin()) {
+                    $_SESSION['errors'] = ['Задача может быть отредактирована только администратором'];
+                    return $controller->showTasks();
+                }
                 $taskId = (int)$this->queryParameter;
                 return $controller->editTask($taskId);
             case "store":
                 $controller = new TaskController();
+                $currentUser = AuthController::getCurrentUser();
+                if ($currentUser === null) {
+                    $_SESSION['errros'] = ['Задача может быть создана только зарегистрированным пользователем'];
+                    return $controller->showTasks();
+                }
                 return $controller->storeTask($this->data);
             case "update":
                 $controller = new TaskController();
+                $currentUser = AuthController::getCurrentUser();
+                if ($currentUser === null || !$currentUser->getIsAdmin()) {
+                    $_SESSION['errors'] =  ['Задачи могут быть отредактированы только администратором'];
+                    return $controller->showTasks();
+                }
                 return $controller->updateTask($this->data);
             case "loginform":
-                $controller = new LoginController();
+                $controller = new AuthController();
                 return $controller->getLoginForm();
             case "login":
-                $controller = new LoginController();
+                $controller = new AuthController();
                 return $controller->login($this->data);
             case "logout":
-                $controller = new LoginController();
+                $controller = new AuthController();
                 $controller->logout();
                 break;
             case "registerForm":
-                $controller = new LoginController();
+                $controller = new AuthController();
                 return $controller->getRegisterForm();
             case "register":
-                $controller = new LoginController();
+                $controller = new AuthController();
                 return $controller->register($this->data);
             case "notfound":
                 return self::view('notfound', 'Page not found', ['message' => 'page not found']);
@@ -167,7 +187,7 @@ class App
                 $this->data = $_POST['task'];
                 return;
             }
-            if ($url[1] === "edit" && array_key_exists('task', $_POST)) {
+            if ($url[1] === "update" && array_key_exists('task', $_POST)) {
                 $this->route = "update";
                 $this->data = $_POST['task'];
                 return;
