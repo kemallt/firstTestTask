@@ -9,27 +9,27 @@ $ composer update
 $ sudo apt install make
 ```
 
-### Connect to Postgres database
+### Connect to Mysql database
 set your data in to config/database.php
 ```php
 <?php
 
-$db_connection = 'pgsql';
+$db_connection = 'mysql';
 $host = 'localhost';
 $db = 'test';             // database name
-$user = 'novapc74';       // users name
-$password = 'test';       // users pasword
-$port = 5432;
+$user = 'root';       // users name
+$password = 'root';       // users pasword
+$port = 3306;
 ```
 ### Create tables 'users' and 'tasks'
 ```
 $ make migrate
 ```
-### Create user-admin in to users table
+### Create user-admin in to users table and seed 10 tasks to task table
 ```
 $ make seed
 ```
-### Refresh all tables
+### Refresh all tables and reseed them
 ```
 $ make refresh
 ```
