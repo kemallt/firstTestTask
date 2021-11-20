@@ -11,7 +11,9 @@ class TaskController
     {
         $chunk = \App\TASKSPERPAGE;
         $tasksCount = Task::getCount();
-        $pageCount = floor($tasksCount / $chunk) + 1;
+        $lastPageTasks = $tasksCount % $chunk;
+        $addPage = $lastPageTasks > 0 ? 1 : 0;
+        $pageCount = floor($tasksCount / $chunk) + $addPage;
         $currentPage = $page ?? 1;
         $offset = ((int)$currentPage - 1) * \App\TASKSPERPAGE;
         $tasks = Task::allWithUsers($offset, $chunk);
