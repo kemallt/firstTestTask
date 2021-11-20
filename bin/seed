@@ -41,4 +41,5 @@ function seedTable($tableName, $seedDirection = 'up')
 function seedAllTables($seedDirection = 'up')
 {
     seedTable('users', $seedDirection);
+    seedTable('tasks', $seedDirection);
 }
