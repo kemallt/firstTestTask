@@ -72,11 +72,13 @@ class TaskController
         $task = new Task($taskData['id']);
         if ($taskData['id'] !== null) {
             $oldDescription = $task->getDescription();
-            $isEditsByAdmin = $oldDescription !== $taskData['description'];
+            if ($oldDescription !== $taskData['description']) {
+                $task->setIsEditsByAdmin(true);
+            }
+            
         }
         $task->setDescription($taskData['description']);
-        $task->setIsDone($taskData['is_done'] ?? false);
-        $task->setIsEditsByAdmin($isEditsByAdmin);
+        $task->setIsDone(array_key_exists('is_done', $taskData) ? true : false);
         $task->save();
         $_SESSION['messages'] = ['Задача успешно обновлена'];
         return $this->showTasks();

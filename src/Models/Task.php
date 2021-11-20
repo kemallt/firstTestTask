@@ -58,9 +58,9 @@ class Task extends Table
         return $this->fields['is_edits_by_admin'];
     }
 
-    public function setIsEditsByAdmin(string $isEditsByAdmin): Task
+    public function setIsEditsByAdmin(bool $isEditsByAdmin): Task
     {
-        $this->fields['is_edits_by_admin'] = password_hash($isEditsByAdmin, PASSWORD_DEFAULT);
+        $this->fields['is_edits_by_admin'] = (int)$isEditsByAdmin;
         return $this;
     }
 

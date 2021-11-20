@@ -20,6 +20,7 @@ try {
     echo $app->getHandler();
 } catch (\Exception $e) {
     $errorMessage = $e->getMessage();
-    $output = \App\App::view('error', 'Ошибка', ['errors' => $errorMessage]);
+    $_SESSION['errors'] = [$errorMessage];
+    $output = \App\App::view('error', 'Ошибка');
     echo $output;
 }
