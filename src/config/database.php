@@ -1,8 +1,8 @@
 <?php
 
 const DB_CONNECTION = 'mysql';
-const HOST = 'localhost';
+const HOST = 'db';
 const DB = 'test';
 const USER = 'root';
-const PASSWORD = '129354';
+const PASSWORD = 'root';
 const PORT = 3306;

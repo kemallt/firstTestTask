@@ -24,10 +24,10 @@ class AuthControllerTest extends TestCase
         
         $config = [
             'db_connection' => 'mysql',
-            'db' => 'testtest',
+            'db' => 'test',
             'user' => 'root',
-            'password' => '129354',
-            'host' => 'localhost',
+            'password' => 'root',
+            'host' => 'db2',
             'port' => 3306
         ];
 
