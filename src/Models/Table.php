@@ -8,7 +8,7 @@ abstract class Table
 {
     protected static string $tableName;
     protected static ?\PDO $connect = null;
-    
+
     protected array $fields;
     protected bool $isNew;
 
@@ -23,7 +23,7 @@ abstract class Table
     {
         static::$connect = DatabaseConnect::getConnect();
     }
-    
+
     protected static function execQuery($query, $params = []): \PDOStatement
     {
         self::init();
@@ -47,7 +47,7 @@ abstract class Table
     {
         $tableName = static::$tableName;
         $query = "select * from {$tableName} where id = :id";
-        $queryRes = $this->execQuery($query, ['id' => $this->fields['id']]);
+        $queryRes = self::execQuery($query, ['id' => $this->fields['id']]);
         if (!$queryRes || $queryRes->rowCount() === 0) {
             throw new \Exception('could not get by supplied id');
         }
@@ -61,7 +61,7 @@ abstract class Table
         $fieldsSting = $this->getInsertFieldsString();
         $tableName = static::$tableName;
         $query = "insert into {$tableName} ({$fieldNamesString}) values ({$fieldsSting})";
-        $queryRes = $this->execQuery($query, $this->fields);
+        $queryRes = self::execQuery($query, $this->fields);
         if (!$queryRes) {
             throw new \Exception("could not insert into {$tableName}");
         }
@@ -74,7 +74,7 @@ abstract class Table
         $tableName = static::$tableName;
         $query = "update {$tableName} set {$updateFieldsString} where id = :id";
         $params = array_merge($this->fields, ['id' => $this->fields['id']]);
-        $queryRes = $this->execQuery($query, $params);
+        $queryRes = self::execQuery($query, $params);
         if (!$queryRes) {
             throw new \Exception("could not update {$tableName}");
         }
@@ -82,7 +82,10 @@ abstract class Table
 
     private function getUpdateFieldString()
     {
-        $fieldEls = array_map(fn ($item) => "{$item}=:{$item}", array_filter(array_keys($this->fields), fn ($item) => $item !== "id"));
+        $fieldEls = array_map(
+            fn ($item) => "{$item}=:{$item}",
+            array_filter(array_keys($this->fields), fn ($item) => $item !== "id")
+        );
         return implode(', ', $fieldEls);
     }
 
@@ -91,7 +94,7 @@ abstract class Table
         return implode(',', array_map(fn($item) => ":{$item}", array_keys($this->fields)));
     }
 
-    private function  getFieldNamesString(): string
+    private function getFieldNamesString(): string
     {
         return implode(", ", array_keys($this->fields));
     }

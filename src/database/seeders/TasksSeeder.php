@@ -5,7 +5,7 @@ namespace App\database\seeders;
 class TasksSeeder extends \App\database\migrations\BaseMigration
 {
 
-    function up()
+    public function up()
     {
         $userRes = $this->connect->query("
             SELECT * FROM users LIMIT 1
@@ -29,7 +29,7 @@ class TasksSeeder extends \App\database\migrations\BaseMigration
         }
     }
 
-    function down()
+    public function down()
     {
         $this->connect->query("
             DELETE FROM tasks;

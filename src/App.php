@@ -12,7 +12,7 @@ class App
     private string $route = "";
     private ?string $queryParameter = null;
     private ?array $data = null;
-    
+
     public function __construct()
     {
         $this->setRoute();
@@ -21,9 +21,9 @@ class App
     public static function getUrl($host)
     {
         $protocol = array_key_exists('HTTPS', $_SERVER) ? "https" : "http";
-        return $protocol . '://' . $host;         
+        return $protocol . '://' . $host;
     }
-    
+
     public static function view(string $viewName, string $title, array $params = []): string
     {
         if (empty($_SESSION['token'])) {
@@ -64,12 +64,12 @@ class App
         } else {
             $errors = [];
         }
-        
+
         $loader = new FilesystemLoader(__DIR__ . '/Views');
         $twig = new Environment($loader);
         return $twig->render("{$viewName}.html.twig", array_merge([
             'token' => $token,
-            'title' => $title, 
+            'title' => $title,
             'host' => $host,
             'isAdmin' => $isAdmin,
             'loginAddress' => $loginAddress,
@@ -81,7 +81,7 @@ class App
             'errors' => $errors
         ], $params));
     }
-    
+
     public function getHandler(): string
     {
         switch ($this->route) {
@@ -142,7 +142,7 @@ class App
         }
         return self::view('notfound', 'Page not found', ['message' => 'page not found']);
     }
-    
+
     public function setRoute()
     {
         $requestUrl = explode('?', $_SERVER['REQUEST_URI']);

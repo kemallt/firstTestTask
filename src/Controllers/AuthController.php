@@ -47,11 +47,11 @@ class AuthController
 
     public function logout(): void
     {
-        self::discardCurrentUser();        
+        self::discardCurrentUser();
         $newUrl = App::getUrl($_SERVER['HTTP_HOST']);
         header("Location: {$newUrl}");
     }
-    
+
     public function register(array $userData): string
     {
         $validationResult = $this->validateUserData($userData);
@@ -70,7 +70,7 @@ class AuthController
         $_SESSION['errors'] = $validationResult['errors'];
         return App::view('registerForm', 'Вход', ['userData' => $userData]);
     }
-    
+
     private function validateUserData($userData): array
     {
         $valid = true;

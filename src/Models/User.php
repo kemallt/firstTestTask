@@ -5,7 +5,7 @@ namespace App\Models;
 class User extends Table
 {
     protected static string $tableName = 'users';
-    
+
     public function __construct($id = null)
     {
         parent::__construct();
@@ -15,7 +15,7 @@ class User extends Table
             'is_admin' => 0,
             'password' => null
         ];
-        
+
         if ($id === null) {
             $this->isNew = true;
         } else {
@@ -90,7 +90,6 @@ class User extends Table
         return array_map(function ($resItem) {
             return new static($resItem['id']);
         }, $resData);
-
     }
 
     public static function find($id): User
@@ -99,7 +98,7 @@ class User extends Table
         $user->select();
         return $user;
     }
-    
+
     public static function findByName($name): User
     {
         $query = "select * from users where name = :name";
@@ -110,7 +109,7 @@ class User extends Table
         }
         throw new \Exception('could not find user');
     }
-    
+
     public function tasks(): array
     {
         $query = "select * from tasks where user_id = :id";

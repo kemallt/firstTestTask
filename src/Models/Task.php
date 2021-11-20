@@ -4,8 +4,8 @@ namespace App\Models;
 
 class Task extends Table
 {
-    protected static string $tableName = 'tasks'; 
-    
+    protected static string $tableName = 'tasks';
+
     public function __construct($id = null)
     {
         parent::__construct();
@@ -89,7 +89,7 @@ class Task extends Table
         }
         return 0;
     }
-    
+
     public static function allWithUsers($offset = null, $chunk = null): array
     {
         $query = "select tasks.id as idFetch,
@@ -108,11 +108,11 @@ class Task extends Table
         }
         $queryRes = self::execQuery($query);
         if ($queryRes && $queryRes->rowCount()) {
-            return $queryRes->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_UNIQUE);
+            return $queryRes->fetchAll(\PDO::FETCH_ASSOC | \PDO::FETCH_UNIQUE);
         }
         return [];
     }
-    
+
     public static function all(): array
     {
         static::init();
@@ -120,7 +120,6 @@ class Task extends Table
         return array_map(function ($resItem) {
             return new static($resItem['id']);
         }, $resData);
-
     }
 
     public static function find($id): Task
@@ -130,12 +129,12 @@ class Task extends Table
         $task->select();
         return $task;
     }
-    
+
     public function getUser(): User
     {
         return new User($this->fields['user_id']);
     }
-    
+
     public function setUser(User $user): Task
     {
         $this->fields['user_id'] = $user->getId();

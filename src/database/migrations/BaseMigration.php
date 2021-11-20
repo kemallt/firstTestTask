@@ -13,6 +13,6 @@ abstract class BaseMigration
         $this->connect = DatabaseConnect::getConnect($config);
     }
 
-    abstract function up();
-    abstract function down();
+    abstract public function up();
+    abstract public function down();
 }

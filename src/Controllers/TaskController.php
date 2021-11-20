@@ -15,14 +15,22 @@ class TaskController
         $currentPage = $page ?? 1;
         $offset = ((int)$currentPage - 1) * \App\TASKSPERPAGE;
         $tasks = Task::allWithUsers($offset, $chunk);
-        return App::view('showTasks', 'Список задач', ['tasks' => $tasks, 'pageCount' => $pageCount, 'page' => $currentPage]);
+        return App::view(
+            'showTasks',
+            'Список задач',
+            [
+                'tasks' => $tasks,
+                'pageCount' => $pageCount,
+                'page' => $currentPage
+            ]
+        );
     }
-    
+
     public function createTask()
     {
         return App::view('editTask', 'Новая задача', ['formAction' => 'store']);
     }
-    
+
     public function editTask($taskId)
     {
         $task = Task::find($taskId);
@@ -37,7 +45,7 @@ class TaskController
         ];
         return App::view('editTask', 'Редактировать задачу', ['formAction' => 'update', 'taskData' => $taskData]);
     }
-    
+
     public function storeTask($taskData)
     {
         $validationResult = $this->validateTaskData($taskData);
@@ -53,7 +61,7 @@ class TaskController
         $_SESSION['messages'] = ['Задача успешно добавлена'];
         return $this->showTasks();
     }
-    
+
     public function updateTask($taskData)
     {
         $validationResult = $this->validateTaskData($taskData);
@@ -73,7 +81,7 @@ class TaskController
         $_SESSION['messages'] = ['Задача успешно обновлена'];
         return $this->showTasks();
     }
-    
+
     public function validateTaskData($taskData): array
     {
         $valid = true;
@@ -82,6 +90,6 @@ class TaskController
             $valid = false;
             $errors[] = 'Описание должно быть более 3 символов в длину';
         }
-        return ['valid' => $valid, 'errors' => $errors]; 
+        return ['valid' => $valid, 'errors' => $errors];
     }
 }

@@ -14,3 +14,6 @@ test:
 
 run:
 	php -S localhost:8000
+
+lint:
+	composer exec --verbose phpcs -- --standard=PSR12 src

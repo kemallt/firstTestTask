@@ -4,7 +4,7 @@ namespace App\database\migrations;
 
 class TasksMigration extends BaseMigration
 {
-    function up()
+    public function up()
     {
         $this->connect->query("
             CREATE TABLE IF NOT EXISTS tasks (
@@ -18,7 +18,7 @@ class TasksMigration extends BaseMigration
         ");
     }
 
-    function down()
+    public function down()
     {
         $this->connect->query("DROP TABLE IF EXISTS tasks");
     }

@@ -4,7 +4,7 @@ namespace App\database\migrations;
 
 class UsersMigration extends BaseMigration
 {
-    function up()
+    public function up()
     {
         $this->connect->query("
             CREATE TABLE IF NOT EXISTS users (
@@ -17,7 +17,7 @@ class UsersMigration extends BaseMigration
         ");
     }
 
-    function down()
+    public function down()
     {
         $this->connect->query("DROP TABLE IF EXISTS users");
     }

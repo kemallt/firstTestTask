@@ -6,7 +6,7 @@ use App\database\migrations\BaseMigration;
 
 class UsersSeeder extends BaseMigration
 {
-    function up()
+    public function up()
     {
         $userAdminExists = $this->connect->query("
             SELECT * FROM users WHERE email = 'admin@admin.com'
@@ -24,7 +24,7 @@ class UsersSeeder extends BaseMigration
             ");
     }
 
-    function down()
+    public function down()
     {
         $this->connect->query("
             DELETE FROM users;
