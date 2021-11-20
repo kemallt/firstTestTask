@@ -3,7 +3,7 @@
 {% block content %}
 <main class="flex-grow-1">
     <div class="container-lg">
-        <table class="table table-bordered table-hover text-nowrap">
+        <table class="table table-striped table-bordered table-hover text-nowrap">
             <thead>
                 <tr>
                     <th class="col-3">Пользователь</th>
@@ -33,6 +33,23 @@
                 {% endfor %}
             </tbody>
         </table>
+        <nav aria-label="Страницы">
+            <ul class="pagination">
+                <li class="page-item {{ page > 1 ? '' : 'disabled' }}">
+                    <a class="page-link" href="{{ host ~ '/?page=' ~ (page - 1) }}" aria-label="Предыдущая">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% for i in 1..pageCount %}
+                    <li class="page-item {{ i == page ? 'active' : '' }}"><a class="page-link" href="{{ host ~ '/?page=' ~ i }}">{{ i }}</a></li>
+                {% endfor %}
+                <li class="page-item {{ page == pageCount ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ host ~ '/?page=' ~ (page + 1) }}" aria-label="Следующая">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </main>
 {% endblock %}

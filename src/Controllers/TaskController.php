@@ -4,14 +4,18 @@ namespace App\Controllers;
 
 use App\Models\Task;
 use App\App;
-use App\Models\User;
 
 class TaskController
 {
-    public function showTasks()
+    public function showTasks($page = null)
     {
-        $tasks = Task::allWithUsers();
-        return App::view('showTasks', 'Список задач', ['tasks' => $tasks]);
+        $chunk = \App\TASKSPERPAGE;
+        $tasksCount = Task::getCount();
+        $pageCount = floor($tasksCount / $chunk) + 1;
+        $currentPage = $page ?? 1;
+        $offset = ((int)$currentPage - 1) * \App\TASKSPERPAGE;
+        $tasks = Task::allWithUsers($offset, $chunk);
+        return App::view('showTasks', 'Список задач', ['tasks' => $tasks, 'pageCount' => $pageCount, 'page' => $currentPage]);
     }
     
     public function createTask()

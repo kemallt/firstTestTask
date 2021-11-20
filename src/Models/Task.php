@@ -80,6 +80,16 @@ class Task extends Table
         return $this;
     }
 
+    public static function getCount(): int
+    {
+        $query = "select count(id) as count from tasks";
+        $queryRes = self::execQuery($query);
+        if ($queryRes && $queryRes->rowCount()) {
+            return $queryRes->fetchObject()->count;
+        }
+        return 0;
+    }
+    
     public static function allWithUsers($offset = null, $chunk = null): array
     {
         $query = "select tasks.id as idFetch,

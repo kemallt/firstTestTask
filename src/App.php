@@ -10,9 +10,8 @@ use Twig\Loader\FilesystemLoader;
 class App
 {
     private string $route = "";
-    private string $queryParameter = "";
+    private ?string $queryParameter = null;
     private ?array $data = null;
-    private static bool $isAdmin = false;
     
     public function __construct()
     {
@@ -88,7 +87,7 @@ class App
         switch ($this->route) {
             case "":
                 $controller = new TaskController();
-                return $controller->showTasks();
+                return $controller->showTasks($this->queryParameter);
             case "create":
                 $controller = new TaskController();
                 $currentUser = AuthController::getCurrentUser();
@@ -157,6 +156,9 @@ class App
         if ($method === 'GET') {
             if ($url[1] === "") {
                 $this->route = "";
+                if (array_key_exists('page', $_GET)) {
+                    $this->queryParameter = $_GET['page'];
+                }
                 return;
             }
             if ($url[1] === "create") {

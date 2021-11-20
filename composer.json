@@ -16,6 +16,7 @@
         },
      "files":[
         "src/config/database.php",
+        "src/config/app.php",
         "src/DatabaseConnect.php"
          ]
     },
